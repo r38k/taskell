@@ -1,4 +1,7 @@
-Please follow the guidelines below.
+---
+trigger: always_on
+---
+
 ## 基本的なルール
 
 - 指定がなければ日本語を使用する
@@ -48,30 +51,3 @@ Please follow the guidelines below.
 - ソースファイル(json等の設定ファイルを除く)を新規作成する場合は，ファイルの先頭に必ず詳細なコメントを書く
 - 実装の意図がコードから読み取りにくい場合は，コメントにて意図を示す
 - AIで生成したコードにはプロンプトをコメントに含める
-
-## TypeScript Style
-
-- 極力Classの使用を避ける
-- 関数は必ず型を明確にする
-
-## Next.js Style
-
-- App Routerを採用する
-- API Routeは極力しようせず，Server Actions等を活用する
-  - どうしても必要な場合は，ユーザーに確認する
-  - 規模に応じてバックエンドは別途作成する
-
-## Prisma
-
-- テーブル定義`schema.prisma`にはコメントで各カラムの説明を書く
-
-データベースのスキーマを変更した場合
-(pnpm devが実行されていない前提)
-1. データベースへ変更を反映する
-```bash
-pnpm prisma db push
-```
-2. prismaクライアントを再生成する
-```bash
-pnpm prisma generate
-```
