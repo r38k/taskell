@@ -33,7 +33,7 @@
 
 | 層          | 使用技術                |
 | ---------- | ------------------- |
-| CLI        | Deno, TypeScript    |
+| CLI        | Deno, TypeScript(React inkも気になる) |
 | MCP Server | Deno or Node.js, TS |
 | Web        | Next.js, TypeScript |
 | テスト        | Vitest              |
