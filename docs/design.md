@@ -1,0 +1,65 @@
+## 仮設計
+
+[Claude CodeのTask](/docs/claude-code-task.md)を参考におおよその設計目途が立ったので，仮設計してデモを作成してみる．
+
+## データ構造
+
+### タスク
+
+```ts
+// タスクの基本構成
+type Task = {
+    id: string;
+    content: string;
+    status: TaskStatus;
+}
+
+// タスクの詳細をメタデータとして扱う
+type TaskMeta = {
+
+}
+
+// タスクのステータス
+type TaskStatus = "pending" | "inProgress" | "completed";
+
+// タスクの集合
+type TaskList = Task[];
+
+// 何らかの目的を達成するためのタスク群
+type TaskSet = {
+    id: string;
+    name: string;
+    tasks: TaskList;
+}
+
+// タスクセットの集合
+type Project = {
+    id: string;
+    name: string;
+    taskSets: TaskSet[];
+}
+```
+
+### スケジュール
+
+```ts
+type TaskSetSchedule = {
+
+}
+```
+
+## データフロー
+
+一旦Claude Codeみたいにjsonファイルで記録する形式にするか？
+それするなら，duckdbみたいなのがあった方がいい気もするが．
+そこは未定
+
+基本機能
+- タスク開始
+- タスク完了
+- タスクセット作成
+- タスクセット取得
+- プロジェクト作成
+- プロジェクト一覧
+- プロジェクトアーカイブ
+
