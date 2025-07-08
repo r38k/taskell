@@ -16,8 +16,12 @@ type Task = {
 
 // タスクの詳細をメタデータとして扱う
 type TaskMeta = {
-
+     id: string;
+     due: TaskDue;
+     priority: TaskPriority;
 }
+
+type TaskDue = {}
 
 // タスクのステータス
 type TaskStatus = "pending" | "inProgress" | "completed";
@@ -44,7 +48,8 @@ type Project = {
 
 ```ts
 type TaskSetSchedule = {
-
+     taskSetId: string;
+     
 }
 ```
 
@@ -56,10 +61,45 @@ type TaskSetSchedule = {
 
 基本機能
 - タスク開始
+- タスク取得
 - タスク完了
 - タスクセット作成
 - タスクセット取得
 - プロジェクト作成
-- プロジェクト一覧
+- プロジェクト取得
 - プロジェクトアーカイブ
+- スケジュール登録
+- スケジュール削除
+- スケジュール取得
 
+```ts
+function startTask(task: Task): Task {
+    return {
+        ...task,
+        status: "inProgress",
+    }
+}
+
+function getTask(taskId: string): Task {
+    // ..
+}
+
+function getInProgressTask(): Task {
+    
+}
+
+function completeTask(task: Task): Task {
+    return {
+        ...task,
+        status: "completed",
+    }
+}
+
+function createTask(content: string): Task {}
+
+function createTaskSet(contents: string[]): TaskSet {}
+
+function getTaskSet(taskSetId: string): TaskSet {}
+```
+
+タスク作成が単独で行われることはおそらくなくて，タスクセットとしてタスクを作成することになる．
