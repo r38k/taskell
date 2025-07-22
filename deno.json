@@ -1,0 +1,21 @@
+{
+  "name": "@r38k/taskell",
+  "version": "0.1.0",
+  "exports": "./src/cli.ts",
+  "tasks": {
+    "dev": "deno run --allow-read --allow-write src/cli.ts",
+    "run": "deno run --allow-read --allow-write src/cli.ts"
+  },
+  "fmt": {
+    "useTabs": false,
+    "lineWidth": 100,
+    "indentWidth": 2,
+    "singleQuote": true,
+    "proseWrap": "preserve"
+  },
+  "lint": {
+    "rules": {
+      "tags": ["recommended"]
+    }
+  }
+}
