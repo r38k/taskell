@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "allowJs": false
+  },
+  "tasks": {
+    "test": "deno test test/",
+    "lint": "deno lint src/",
+    "fmt": "deno fmt src/ test/"
+  },
+  "exclude": ["node_modules/"],
+  "imports": {
+    "std/": "https://deno.land/std@0.208.0/"
+  }
+}
