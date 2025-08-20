@@ -1,105 +1,22 @@
-## 仮設計
+## 仮設計2
 
-[Claude CodeのTask](/docs/claude-code-task.md)を参考におおよその設計目途が立ったので，仮設計してデモを作成してみる．
+[コアコンセプト]
+タスクは状態変化であり，関数である．
+タスクの実施に対する状態の変化を記述できないものはタスクではない．
 
-## データ構造
-
-### タスク
+## データモデル
 
 ```ts
-// タスクの基本構成
 type Task = {
     id: string;
-    content: string;
-    status: TaskStatus;
-}
-
-// タスクの詳細をメタデータとして扱う
-type TaskMeta = {
-     id: string;
-     due: TaskDue;
-     priority: TaskPriority;
-}
-
-type TaskDue = {}
-
-// タスクのステータス
-type TaskStatus = "pending" | "inProgress" | "completed";
-
-// タスクの集合
-type TaskList = Task[];
-
-// 何らかの目的を達成するためのタスク群
-type TaskSet = {
-    id: string;
     name: string;
-    tasks: TaskList;
 }
 
-// タスクセットの集合
-type Project = {
+type TaskDetail = {
     id: string;
-    name: string;
-    taskSets: TaskSet[];
+    description: string;
 }
+
+type 
+
 ```
-
-### スケジュール
-
-```ts
-type TaskSetSchedule = {
-     taskSetId: string;
-     
-}
-```
-
-## データフロー
-
-一旦Claude Codeみたいにjsonファイルで記録する形式にするか？
-それするなら，duckdbみたいなのがあった方がいい気もするが．
-そこは未定
-
-基本機能
-- タスク開始
-- タスク取得
-- タスク完了
-- タスクセット作成
-- タスクセット取得
-- プロジェクト作成
-- プロジェクト取得
-- プロジェクトアーカイブ
-- スケジュール登録
-- スケジュール削除
-- スケジュール取得
-
-```ts
-function startTask(task: Task): Task {
-    return {
-        ...task,
-        status: "inProgress",
-    }
-}
-
-function getTask(taskId: string): Task {
-    // ..
-}
-
-function getInProgressTask(): Task {
-    
-}
-
-function completeTask(task: Task): Task {
-    return {
-        ...task,
-        status: "completed",
-    }
-}
-
-function createTask(content: string): Task {}
-
-function createTaskSet(contents: string[]): TaskSet {}
-
-function getTaskSet(taskSetId: string): TaskSet {}
-```
-
-タスク作成が単独で行われることはおそらくなくて，タスクセットとしてタスクを作成することになる．
