@@ -22,7 +22,11 @@ type ScheduledTask = Task & {
     dueDate: Date;
 }
 
-type TaskSet = ReadonlyArray<Task>;
+type TaskSet = {
+  id: string;
+  name: string;
+  tasks: ReadonlyArray<Task>;
+}
 ```
 
 とりあえず最小限で進める

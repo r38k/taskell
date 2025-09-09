@@ -1,0 +1,30 @@
+{
+  "name": "taskell",
+  "version": "1.0.0",
+  "description": "個人用タスクツール taskell(仮) ※たまたまHaskellを触りはじめたことから命名",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/r38k/taskell.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/r38k/taskell/issues"
+  },
+  "homepage": "https://github.com/r38k/taskell#readme",
+  "dependencies": {
+    "neverthrow": "^8.2.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.2.3"
+  }
+}
