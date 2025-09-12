@@ -3,10 +3,10 @@ import { Result } from "neverthrow";
 
 export interface TaskStorage {
     // タスク操作系
-    addTask(task: Task): Result<string, Error>;
-    addScheduledTask(task: ScheduledTask): Result<string, Error>;
-    addTaskSet(taskSet: TaskSet): Result<string, Error>;
-    completeTask(id: string): Result<string, Error>;
+    addTask(task: Task): Promise<Result<string, Error>>;
+    addScheduledTask(task: ScheduledTask): Promise<Result<string, Error>>;
+    addTaskSet(taskSet: TaskSet): Promise<Result<string, Error>>;
+    completeTask(id: string): Promise<Result<string, Error>>;
     
     // タスク取得系
     getTaskById(id: string): Promise<Result<Task, Error>>;

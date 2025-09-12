@@ -23,7 +23,8 @@
   "homepage": "https://github.com/r38k/taskell#readme",
   "dependencies": {
     "neverthrow": "^8.2.0",
-    "pino": "^9.9.5"
+    "pino": "^9.9.5",
+    "uuid": "^13.0.0"
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.3",

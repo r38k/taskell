@@ -1,7 +1,7 @@
 export type Task = {
     id: string;
     name: string;
-    delta: string;
+    delta?: string;
 }
 
 export type ScheduledTask = Task & { 

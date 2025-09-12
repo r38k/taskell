@@ -8,7 +8,7 @@ const BASE_PATH = "~/.config/taskell";
 
 export const jsonLinesStorage: TaskStorage = {
 
-    addTask(task: Task) {
+    async addTask(task: Task) {
         try {
             const filePath = `${BASE_PATH}/${task.id}.jsonl`;
             const fileContent = `${JSON.stringify(task)}\n`;
@@ -19,7 +19,7 @@ export const jsonLinesStorage: TaskStorage = {
         }
     },
 
-    addScheduledTask(task: ScheduledTask) {
+    async addScheduledTask(task: ScheduledTask) {
         try {
             const filePath = `${BASE_PATH}/${task.id}.jsonl`;
             const fileContent = `${JSON.stringify(task)}\n`;
@@ -30,7 +30,7 @@ export const jsonLinesStorage: TaskStorage = {
         }
     },
 
-    addTaskSet(taskSet: TaskSet) {
+    async addTaskSet(taskSet: TaskSet) {
         try {
             const filePath = `${BASE_PATH}/${taskSet.id}.jsonl`;
             const fileContent = `${JSON.stringify(taskSet)}\n`;
@@ -45,7 +45,7 @@ export const jsonLinesStorage: TaskStorage = {
      * タスクファイルを完了ディレクトリへ移動
      * @param id 
      */
-    completeTask(id: string) {
+    async completeTask(id: string) {
         try {
             const filePath = `${BASE_PATH}/${id}.jsonl`;
             const doneFilePath = `${BASE_PATH}/done/${id}.jsonl`;

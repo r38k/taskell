@@ -15,7 +15,7 @@
 type Task = {
     id: string;
     name: string;
-    delta: string;
+    delta?: string;
 }
 
 type ScheduledTask = Task & {
@@ -42,12 +42,13 @@ type TaskSet = {
 
 ```ts
 function addTask(name: string, delta?: string): Task;
-
-function setSchedule(task: Task, dueDate: Date): ScheduledTask;
 function addScheduledTask(name: string, dueDate: Date, delta?: string): ScheduledTask;
-
 function addTaskSet(tasks: ReadonlyArray<Task>): TaskSet;
 
+function setSchedule(task: Task, dueDate: Date): ScheduledTask;
+function groupTask(name: string, tasks: ReadonlyArray<Task>): TaskSet;
+
+// task/scheduled/tasksetでそれぞれ必要？
 function startTask(task: Task): Task;
 function doneTask(task: Task): Task;
 ```
@@ -60,6 +61,24 @@ function doneTask(task: Task): Task;
 タスクのステータスはdone or notのシンプルな形で，ディレクトリ分けて完了したら移動する．
 (ステータスは3つでもいいかも，ファイル移動だけだし)
 タスクの編集はファイルを編集する．
+
+タスク，スケジュールタスク，タスクセットをそれぞれ別のディレクトリにするかどうか．
+
+ディレクトリ構成
+- ~/.config/taskell/
+  - task/
+    - unit/
+      - inbox
+      - active
+      - done
+    - scheduled/
+      - inbox
+      - active
+      - done
+    - taskset/
+      - inbox
+      - active
+      - done
 
 ## CLI
 
