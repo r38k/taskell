@@ -16,6 +16,33 @@ export async function addTask(name: string, delta?: string): Promise<Result<Task
     return ok(task);
 }
 
+export async function addScheduledTask(name: string, dueDate: Date, delta?: string): Promise<Result<ScheduledTask, Error>> {
+    const scheduledTask = {
+        id: uuidv4(),
+        name,
+        dueDate,
+        delta,
+    };
+    const result = await jsonLinesStorage.addScheduledTask(scheduledTask);
+    if (result.isErr()) {
+        return err(result.error);
+    }
+    return ok(scheduledTask);
+}
+
+export async function addTaskSet(name: string, tasks: ReadonlyArray<Task>): Promise<Result<TaskSet, Error>> {
+    const taskSet = {
+        id: uuidv4(),
+        name,
+        tasks,
+    };
+    const result = await jsonLinesStorage.addTaskSet(taskSet);
+    if (result.isErr()) {
+        return err(result.error);
+    }
+    return ok(taskSet);
+}
+
 export async function setSchedule(task: Task, dueDate: Date): Promise<Result<ScheduledTask, Error>> {
     const scheduledTask = {
         ...task,
@@ -31,22 +58,7 @@ export async function setSchedule(task: Task, dueDate: Date): Promise<Result<Sch
     return ok(scheduledTask);
 }
 
-export async function addScheduledTask(name: string, dueDate: Date, delta?: string): Promise<Result<ScheduledTask, Error>> {
-    const scheduledTask = {
-        id: uuidv4(),
-        name,
-        dueDate,
-        delta,
-    };
-    const result = await jsonLinesStorage.addScheduledTask(scheduledTask);
-    if (result.isErr()) {
-        return err(result.error);
-    }
-    return ok(scheduledTask);
-}
-
-
-export async function addTaskSet(name: string, tasks: ReadonlyArray<Task>): Promise<Result<TaskSet, Error>> {
+export async function groupTask(name: string, tasks: ReadonlyArray<Task>): Promise<Result<TaskSet, Error>> {
     const taskSet = {
         id: uuidv4(),
         name,
@@ -59,8 +71,16 @@ export async function addTaskSet(name: string, tasks: ReadonlyArray<Task>): Prom
     return ok(taskSet);
 }
 
+export async function startTask(task: Task): Promise<Result<Task, Error>> {
+    const result = await jsonLinesStorage.updateTaskStatus(task.id, "unit", "inbox", "active");
+    if (result.isErr()) {
+        return err(result.error);
+    }
+    return ok(task);
+}
+
 export async function doneTask(task: Task): Promise<Result<Task, Error>> {
-    const result = await jsonLinesStorage.completeTask(task.id);
+    const result = await jsonLinesStorage.updateTaskStatus(task.id, "unit", "active", "done");
     if (result.isErr()) {
         return err(result.error);
     }

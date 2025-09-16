@@ -14,3 +14,5 @@ export type TaskSet = {
     tasks: ReadonlyArray<Task>;
 }
 
+export type TaskType = "unit" | "scheduled" | "taskset";
+export type TaskStatus = "inbox" | "active" | "done";
