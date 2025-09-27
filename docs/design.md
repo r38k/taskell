@@ -51,7 +51,24 @@ function groupTask(name: string, tasks: ReadonlyArray<Task>): TaskSet;
 // task/scheduled/tasksetでそれぞれ必要？
 function startTask(task: Task): Task;
 function doneTask(task: Task): Task;
+// DateはTemporal.PlainDateに置き換え
 ```
+
+## ワークフロー
+
+タスクの追加
+- UnvalidatedTask
+- ValidatedTask
+- CreatedTask
+-> saveCreatedTask
+
+saveCreatedTask = ({repos}: TaskRepository) => (input: CreatedTask): ResultAsync...
+依存関係はカリー化してDI
+`ok(UnvalidatedTask).andThen(workflow).andThen(saveCreatedTask(context))`の形
+
+タスクの状態変更
+なんかバリデーションが必要なこととかある？
+単純に前の状態のinterfaceから次の状態のinterfaceに変換する関数があればいい？
 
 ## データストア
 

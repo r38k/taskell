@@ -22,9 +22,10 @@
   },
   "homepage": "https://github.com/r38k/taskell#readme",
   "dependencies": {
+    "nanoid": "^5.1.5",
     "neverthrow": "^8.2.0",
     "pino": "^9.9.5",
-    "uuid": "^13.0.0"
+    "temporal-polyfill": "^0.3.0"
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.3",
