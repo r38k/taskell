@@ -1,16 +1,21 @@
-import { ok, ResultAsync } from "neverthrow";
-import { ScheduledTask, taskDelta, UnitTask } from "../type";
+import type { ResultAsync } from 'neverthrow';
+import { resultAsyncFromResult } from '../../util/result';
+import type { RepositoryError, TaskRepository } from '../repository';
+import { type ScheduleUnitTaskError, scheduleUnitTask } from '../task';
+import type { ScheduledTask, UnitTask } from '../type';
 
+export type WithDueDateInput = {
+	task: UnitTask;
+	dueDate: string;
+};
 
-// 仮置き
-interface TaskRepository {
+export type WithDueDateError = ScheduleUnitTaskError | RepositoryError;
 
-}
+type SaveScheduledTaskPort = Pick<TaskRepository, 'saveScheduledTask'>;
 
-export const withDueDate = (repos: TaskRepository) => (input: {task: UnitTask, date: string}): ResultAsync<ScheduledTask, Error> => {
-    const scheduledTask = {
-        ...input.task,
-        type: "scheduled",
-        dueDate: input.date,    
-    }
-}
+export const withDueDate =
+	(repository: SaveScheduledTaskPort) =>
+	(input: WithDueDateInput): ResultAsync<ScheduledTask, WithDueDateError> =>
+		resultAsyncFromResult(scheduleUnitTask(input.task, input.dueDate)).andThen(
+			(scheduledTask) => repository.saveScheduledTask(scheduledTask),
+		);

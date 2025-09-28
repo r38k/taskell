@@ -1,23 +1,49 @@
-import type { ScheduledTask, Task, TaskSet, TaskStatus, TaskType } from "../type";
-import { Result } from "neverthrow";
+import type { ResultAsync } from 'neverthrow';
+import type {
+	ScheduledTask,
+	TaskId,
+	TaskSet,
+	TaskSetId,
+	TaskStatus,
+	TaskType,
+	UnitTask,
+} from '../type';
 
-export interface TaskStorage {
-    // タスク追加
-    addTask(task: Task): Promise<Result<string, Error>>;
-    addScheduledTask(task: ScheduledTask): Promise<Result<string, Error>>;
-    addTaskSet(taskSet: TaskSet): Promise<Result<string, Error>>;
-    
-    // タスク編集
+export type RepositoryErrorKind = 'IO' | 'Parse' | 'Validation' | 'NotFound';
 
-    // タスク状態変更
-    updateTaskStatus(id: string, type: TaskType, currentStatus: TaskStatus, targetStatus: TaskStatus): Promise<Result<string, Error>>;
+export type RepositoryError = {
+	kind: RepositoryErrorKind;
+	message: string;
+	cause?: unknown;
+};
 
-    // タスク取得
-    getTaskById(id: string): Promise<Result<Task, Error>>;
-    getTaskSetById(id: string): Promise<Result<TaskSet, Error>>;
+export type RepositoryResult<TValue> = ResultAsync<TValue, RepositoryError>;
 
-    // 複数タスク取得
-    getTasks(): Promise<Result<Task[], Error>>;
-    getScheduledTasks(): Promise<Result<ScheduledTask[], Error>>;
-    getTaskSets(): Promise<Result<TaskSet[], Error>>;
+export interface TaskRepository {
+	saveUnitTask(task: UnitTask, status?: TaskStatus): RepositoryResult<UnitTask>;
+	saveScheduledTask(task: ScheduledTask, status?: TaskStatus): RepositoryResult<ScheduledTask>;
+	saveTaskSet(taskSet: TaskSet, status?: TaskStatus): RepositoryResult<TaskSet>;
+
+	findUnitTask(id: TaskId): RepositoryResult<UnitTask>;
+	findScheduledTask(id: TaskId): RepositoryResult<ScheduledTask>;
+	findTaskSet(id: TaskSetId): RepositoryResult<TaskSet>;
+
+	listUnitTasks(status: TaskStatus): RepositoryResult<ReadonlyArray<UnitTask>>;
+	listScheduledTasks(status: TaskStatus): RepositoryResult<ReadonlyArray<ScheduledTask>>;
+	listTaskSets(status: TaskStatus): RepositoryResult<ReadonlyArray<TaskSet>>;
+
+	updateTaskStatus(input: {
+		id: TaskId | TaskSetId;
+		type: TaskType;
+		from: TaskStatus;
+		to: TaskStatus;
+	}): RepositoryResult<void>;
+
+	removeTask(task: {
+		id: TaskId | TaskSetId;
+		type: TaskType;
+		status: TaskStatus;
+	}): RepositoryResult<void>;
 }
+
+export type TaskPersistencePort = TaskRepository;

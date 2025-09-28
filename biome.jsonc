@@ -10,7 +10,10 @@
 	},
 	"formatter": {
 		"enabled": true,
-		"indentStyle": "tab"
+		"indentStyle": "tab",
+			"indentWidth": 4,
+			"lineWidth": 100,
+			"bracketSpacing": true
 	},
 	"linter": {
 		"enabled": true,
@@ -20,7 +23,8 @@
 	},
 	"javascript": {
 		"formatter": {
-			"quoteStyle": "double"
+			"quoteStyle": "single",
+			"semicolons": "always"
 		}
 	},
 	"assist": {
@@ -30,5 +34,14 @@
 				"organizeImports": "on"
 			}
 		}
-	}
+	},
+	"overrides": [
+		{
+			"includes": ["*.md"],
+			"formatter": {
+				"indentStyle": "space",
+				"indentWidth": 2
+			}
+		}
+	]
 }
