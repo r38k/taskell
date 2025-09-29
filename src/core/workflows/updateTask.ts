@@ -1,21 +1,47 @@
-import type { ResultAsync } from 'neverthrow';
-import { resultAsyncFromResult } from '../../util/result';
-import type { RepositoryError, TaskRepository } from '../repository';
-import { type ScheduleUnitTaskError, scheduleUnitTask } from '../task';
-import type { ScheduledTask, UnitTask } from '../type';
+import { Result } from 'neverthrow';
+import { Task, taskDueDate, TaskDueDateError, TaskSet, taskSetId, TaskSetIdError, taskSetName, TaskSetNameError, type ScheduledTask, type UnitTask } from '../type';
+import { nanoid } from 'nanoid';
 
-export type WithDueDateInput = {
+// Adding due date to a unit task
+
+export interface WithDueDateInput {
 	task: UnitTask;
 	dueDate: string;
 };
 
-export type WithDueDateError = ScheduleUnitTaskError | RepositoryError;
+export interface WithDueDateError extends TaskDueDateError {};
 
-type SaveScheduledTaskPort = Pick<TaskRepository, 'saveScheduledTask'>;
+export type WithDueDate = (input: WithDueDateInput) => Result<ScheduledTask, WithDueDateError>;
 
-export const withDueDate =
-	(repository: SaveScheduledTaskPort) =>
-	(input: WithDueDateInput): ResultAsync<ScheduledTask, WithDueDateError> =>
-		resultAsyncFromResult(scheduleUnitTask(input.task, input.dueDate)).andThen(
-			(scheduledTask) => repository.saveScheduledTask(scheduledTask),
-		);
+export const withDueDate: WithDueDate = (input): Result<ScheduledTask, WithDueDateError> => {
+	return taskDueDate(input.dueDate).map((parsedDueDate) => ({
+		...input.task,
+		type: 'scheduled',
+		dueDate: parsedDueDate,
+	}));
+};
+
+// Grouping tasks into a task set
+
+interface GroupTasks {
+	name: string;
+	tasks: ReadonlyArray<Task>;
+}
+
+interface GroupTasksError extends TaskSetIdError, TaskSetNameError {};
+
+export type groupTasks = (input: GroupTasks) => Result<TaskSet, GroupTasksError>;
+
+export const groupTasks: groupTasks = (input) => {
+	const id = taskSetId(nanoid());
+	const name = taskSetName(input.name);
+
+	const values = Result.combine([id, name]);
+
+	return values.map(([id, name]) => ({
+		type: 'taskset' as const,
+		id,
+		name: name,
+		tasks: input.tasks,
+	}));
+}

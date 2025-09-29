@@ -47,13 +47,20 @@ export const taskDueDate = (date: string): Result<TaskDueDate, TaskDueDateError>
 };
 
 export type TaskSetId = NewType<'TaskSetId', string>;
-type TaskSetIdError = {
+export type TaskSetIdError = {
 	kind: 'Validation';
 };
 export const taskSetId = (id: string): Result<TaskSetId, TaskSetIdError> => {
 	return /^[a-zA-Z0-9_-]{21}$/.test(id) ? ok(id as TaskSetId) : err({ kind: 'Validation' });
 };
 export type TaskSetName = NewType<'TaskSetName', string>;
+export type TaskSetNameError = {
+	kind: 'Validation';
+};
+
+export const taskSetName = (name: string): Result<TaskSetName, TaskNameError> => {
+	return name.length > 0 ? ok(name as TaskSetName) : err({ kind: 'Validation' });
+}
 
 type _Task = {
 	id: TaskId;
