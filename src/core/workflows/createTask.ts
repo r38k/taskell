@@ -14,7 +14,7 @@ interface ValidatedTask {
     delta?: TaskDelta;
 }
 
-interface CreatedTask {
+export interface CreatedTask {
     kind: "created";
     id: TaskId;
     name: TaskName;
