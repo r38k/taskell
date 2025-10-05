@@ -1,5 +1,5 @@
 import { ok, Result } from "neverthrow";
-import { taskDelta, TaskDelta, TaskDeltaError, taskId, TaskId, TaskIdError, taskName, TaskName, TaskNameError } from "../type";
+import { taskDelta, type TaskDelta, type TaskDeltaError, taskId, type TaskId, type TaskIdError, taskName, type TaskName, type TaskNameError } from "../type.js";
 import { nanoid } from 'nanoid'
 
 interface UnvalidatedTask {

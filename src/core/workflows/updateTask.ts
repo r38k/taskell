@@ -1,5 +1,5 @@
 import { Result } from 'neverthrow';
-import { Task, taskDueDate, TaskDueDateError, TaskSet, taskSetId, TaskSetIdError, taskSetName, TaskSetNameError, type ScheduledTask, type UnitTask } from '../type';
+import { type Task, taskDueDate, type TaskDueDateError, type TaskSet, taskSetId, type TaskSetIdError, taskSetName, type TaskSetNameError, type ScheduledTask, type UnitTask } from '../type.js';
 import { nanoid } from 'nanoid';
 
 // Adding due date to a unit task

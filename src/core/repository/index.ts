@@ -1,13 +1,12 @@
 import type { ResultAsync } from 'neverthrow';
-import type {
-	ScheduledTask,
-	TaskId,
-	TaskSet,
-	TaskSetId,
-	TaskStatus,
-	TaskType,
-	UnitTask,
-} from '../type';
+import {
+	type ScheduledTask,
+	type TaskId,
+	type TaskSet,
+	type TaskSetId,
+	type TaskStatus,
+	type UnitTask,
+} from '../type.js';
 
 export type RepositoryErrorKind = 'IO' | 'Parse' | 'Validation' | 'NotFound';
 
@@ -28,22 +27,22 @@ export interface TaskRepository {
 	findScheduledTask(id: TaskId): RepositoryResult<ScheduledTask>;
 	findTaskSet(id: TaskSetId): RepositoryResult<TaskSet>;
 
-	listUnitTasks(status: TaskStatus): RepositoryResult<ReadonlyArray<UnitTask>>;
-	listScheduledTasks(status: TaskStatus): RepositoryResult<ReadonlyArray<ScheduledTask>>;
-	listTaskSets(status: TaskStatus): RepositoryResult<ReadonlyArray<TaskSet>>;
+	// listUnitTasks(status: TaskStatus): RepositoryResult<ReadonlyArray<UnitTask>>;
+	// listScheduledTasks(status: TaskStatus): RepositoryResult<ReadonlyArray<ScheduledTask>>;
+	// listTaskSets(status: TaskStatus): RepositoryResult<ReadonlyArray<TaskSet>>;
 
-	updateTaskStatus(input: {
-		id: TaskId | TaskSetId;
-		type: TaskType;
-		from: TaskStatus;
-		to: TaskStatus;
-	}): RepositoryResult<void>;
+	// updateTaskStatus(input: {
+	// 	id: TaskId | TaskSetId;
+	// 	type: TaskType;
+	// 	from: TaskStatus;
+	// 	to: TaskStatus;
+	// }): RepositoryResult<void>;
 
-	removeTask(task: {
-		id: TaskId | TaskSetId;
-		type: TaskType;
-		status: TaskStatus;
-	}): RepositoryResult<void>;
+	// removeTask(task: {
+	// 	id: TaskId | TaskSetId;
+	// 	type: TaskType;
+	// 	status: TaskStatus;
+	// }): RepositoryResult<void>;
 }
 
 export type TaskPersistencePort = TaskRepository;

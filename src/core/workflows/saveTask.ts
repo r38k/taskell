@@ -1,6 +1,6 @@
 import { ResultAsync } from "neverthrow";
-import { CreatedTask } from "./createTask";
-import { UnitTask } from "../type";
+import type { CreatedTask } from "./createTask.js";
+import type { UnitTask } from "../type.js";
 
 type RepositoryError = undefined
 
@@ -19,5 +19,4 @@ export const saveTask: saveTask = (repository) => (input) => {
             delta: input.delta
         })
         , () => undefined)
-
 }

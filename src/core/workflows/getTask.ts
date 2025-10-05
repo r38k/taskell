@@ -1,0 +1,4 @@
+
+interface GetTaskCommand {
+    id: string;
+}
