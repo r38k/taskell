@@ -12,10 +12,10 @@ npm install temporal-polyfill
 
 ```ts
 // ESM/CJS で Temporal 名前空間を直接使う
-import { Temporal } from 'temporal-polyfill';
+import { Temporal } from "temporal-polyfill";
 
 // グローバルに注入したい場合
-import 'temporal-polyfill/global'; // globalThis.Temporal が定義される
+import "temporal-polyfill/global"; // globalThis.Temporal が定義される
 ```
 
 ブラウザは CDN で手軽に試せます。
@@ -23,7 +23,7 @@ import 'temporal-polyfill/global'; // globalThis.Temporal が定義される
 ```html
 <script src="https://cdn.jsdelivr.net/npm/temporal-polyfill@0.3.0/global.min.js"></script>
 <script>
-  console.log(Temporal.PlainDate.from('2024-12-25').toString());
+  console.log(Temporal.PlainDate.from("2024-12-25").toString());
 </script>
 ```
 
@@ -79,15 +79,14 @@ function fromFields(year: number, month: number, day: number) {
 `Temporal.PlainDate.compare(a, b)` は `a < b` なら `-1`、`a === b` なら `0`、`a > b` なら `1` を返します。これを利用して上下限チェックができます。
 
 ```ts
-const min = Temporal.PlainDate.from('2020-01-01');
-const max = Temporal.PlainDate.from('2030-12-31');
+const min = Temporal.PlainDate.from("2020-01-01");
+const max = Temporal.PlainDate.from("2030-12-31");
 
 function isInRange(input: string) {
   try {
     const value = Temporal.PlainDate.from(input);
     return (
-      Temporal.PlainDate.compare(value, min) >= 0 &&
-      Temporal.PlainDate.compare(value, max) <= 0
+      Temporal.PlainDate.compare(value, min) >= 0 && Temporal.PlainDate.compare(value, max) <= 0
     );
   } catch {
     return false;
@@ -104,9 +103,9 @@ function isInRange(input: string) {
 - カスタム表示は `Intl.DateTimeFormat` や `Temporal.Now` と組み合わせる
 
 ```ts
-const date = Temporal.PlainDate.from('2024-07-01');
-const formatter = new Intl.DateTimeFormat('ja-JP', { dateStyle: 'long' });
-console.log(formatter.format(date.toZonedDateTime('UTC').epochMilliseconds));
+const date = Temporal.PlainDate.from("2024-07-01");
+const formatter = new Intl.DateTimeFormat("ja-JP", { dateStyle: "long" });
+console.log(formatter.format(date.toZonedDateTime("UTC").epochMilliseconds));
 ```
 
 ## 6. 小さな Tips

@@ -7,26 +7,27 @@
 ## データモデル
 
 表現したいデータ
+
 - 生のタスク(雑タスク)
 - スケジュール付きタスク
 - タスクセット
 
 ```ts
 type Task = {
-    id: string;
-    name: string;
-    delta?: string;
-}
+  id: string;
+  name: string;
+  delta?: string;
+};
 
 type ScheduledTask = Task & {
-    dueDate: Date;
-}
+  dueDate: Date;
+};
 
 type TaskSet = {
   id: string;
   name: string;
   tasks: ReadonlyArray<Task>;
-}
+};
 ```
 
 とりあえず最小限で進める
@@ -34,6 +35,7 @@ type TaskSet = {
 ## データフロー
 
 必要な操作
+
 - タスクの追加
 - スケジュールの追加
 - タスクセットの追加
@@ -57,10 +59,11 @@ function doneTask(task: Task): Task;
 ## ワークフロー
 
 タスクの追加
+
 - UnvalidatedTask
 - ValidatedTask
 - CreatedTask
--> saveCreatedTask
+  -> saveCreatedTask
 
 saveCreatedTask = ({repos}: TaskRepository) => (input: CreatedTask): ResultAsync...
 依存関係はカリー化してDI
@@ -82,6 +85,7 @@ saveCreatedTask = ({repos}: TaskRepository) => (input: CreatedTask): ResultAsync
 タスク，スケジュールタスク，タスクセットをそれぞれ別のディレクトリにするかどうか．
 
 ディレクトリ構成
+
 - ~/.config/taskell/
   - task/
     - unit/
@@ -105,10 +109,9 @@ saveCreatedTask = ({repos}: TaskRepository) => (input: CreatedTask): ResultAsync
 React Inkでやってみよう．
 
 必要なコンポーネント
+
 - 入力欄
 - タスク一覧
   - 期日順とかできるといいね
 
 最低限これがあれば使えはするか
-
-

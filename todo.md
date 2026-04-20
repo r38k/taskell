@@ -1,4 +1,0 @@
-- [ ] prettierからbiomeへ移行?
-- [ ] AGENTS.mdへ移行?
-- [ ] biomeの設定
-- [ ] biomeの使い方確認

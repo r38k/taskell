@@ -27,11 +27,11 @@ Claude Codeのタスク機能が気になるので見てみた．
 ]
 ```
 
-* `content`: タスクの内容
-* `status`: タスクのステータス
-* `priority`: タスクの優先度
-* `id`: タスクのID
-で構成されている．
+- `content`: タスクの内容
+- `status`: タスクのステータス
+- `priority`: タスクの優先度
+- `id`: タスクのID
+  で構成されている．
 
 ![](claude-code-task-todo.png)
 
@@ -50,7 +50,6 @@ AIが扱うという点では，裏側にメタデータとして詳細な情報
 タスクセットを複数持つのがプロジェクトとなる．
 スケジュールはタスクセット毎に設定する感じ？
 ので，複数日をまたぐタスクはタスクセットとしてプロジェクトにまとめる．
-
 
 # Claude CodeのTask
 
@@ -81,11 +80,11 @@ Claude Codeのタスク機能が気になるので見てみた．
 ]
 ```
 
-* `content`: タスクの内容
-* `status`: タスクのステータス
-* `priority`: タスクの優先度
-* `id`: タスクのID
-で構成されている．
+- `content`: タスクの内容
+- `status`: タスクのステータス
+- `priority`: タスクの優先度
+- `id`: タスクのID
+  で構成されている．
 
 ![](claude-code-task-todo.png)
 
@@ -114,12 +113,14 @@ Claude CodeはTodo操作系について，以下のような説明を受けて�
 The Todo tools are described as follows:
 
 TodoRead:
+
 - Used to read the current to-do list for the session
 - Should be used proactively and frequently to track task status
 - Takes no parameters (leave input blank)
 - Returns a list of todo items with status, priority, and content
 
 TodoWrite:
+
 - Used to create and manage a structured task list for coding sessions
 - Helps track progress, organize complex tasks, and demonstrate thoroughness
 - Should be used for:

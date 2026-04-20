@@ -1,47 +1,9 @@
 {
-  // Taskell TypeScript設定
-  // 厳格な型チェックとESMサポートを備えたモダンNode.jsプロジェクト
-
   "compilerOptions": {
-    // ===== ファイル構成 =====
-    "rootDir": "./src",           // ソースコードのルートディレクトリ
-    "outDir": "./dist",            // コンパイル結果の出力先
-
-    // ===== モジュールシステム =====
-    // Node.js ESMとpackage.json "exports"フィールドの完全サポート
-    "module": "nodenext",          // Node.jsネイティブのESM解決を使用
-    "target": "esnext",            // 最新のECMAScript機能をターゲット
-    "lib": ["esnext"],             // 最新の標準ライブラリ型定義を含む
-    "types": ["node"],             // Node.js型定義を含む
-
-    // ===== 出力ファイル生成 =====
-    "sourceMap": true,             // デバッグ用の.mapファイルを生成
-    "declaration": true,           // 型情報用の.d.tsファイルを生成
-    "declarationMap": true,        // 型定義のソースマッピング用.d.ts.mapを生成
-
-    // ===== 型安全性の強化 =====
-    // 安全でない配列・オブジェクトアクセスパターンを防止
-    "noUncheckedIndexedAccess": true,  // インデックスアクセス時にundefinedチェックを要求
-
-    // ===== コード品質の強制 =====
-    // 明示的な制御フローと一般的なミスを防止
-    "noImplicitReturns": true,         // すべてのコードパスで値を返すことを要求
-    "noImplicitOverride": true,        // 明示的な'override'キーワードを要求
-    "noUnusedLocals": true,            // 未使用のローカル変数を検出
-    "noUnusedParameters": true,        // 未使用の関数パラメータを検出
-    "noFallthroughCasesInSwitch": true, // switch文での意図しないフォールスルーを防止
-    "noPropertyAccessFromIndexSignature": true, // インデックスシグネチャにはブラケット記法を強制
-
-    // ===== 推奨される厳格オプション =====
-    "strict": true,                    // すべての厳格な型チェックオプションを有効化
-    "verbatimModuleSyntax": true,      // 型のみのインポートに'type'キーワードを強制
-    "isolatedModules": true,           // 各ファイルを独立してトランスパイル可能にする
-    "noUncheckedSideEffectImports": true, // 副作用のあるインポートを明示的にする
-    "moduleDetection": "force",        // すべてのファイルをモジュールとして扱う（グローバルスコープなし）
-    "skipLibCheck": true,              // パフォーマンスのため型定義ファイルの型チェックをスキップ
-  },
-
-  // ===== プロジェクト構造 =====
-  "include": ["src/**/*"],       // src/内のすべてのTypeScriptファイルを含む
-  "exclude": ["node_modules", "dist", "docs"]  // 依存関係とビルド出力を除外
+    "noEmit": true,
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "allowImportingTsExtensions": true,
+    "esModuleInterop": true
+  }
 }
