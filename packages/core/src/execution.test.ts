@@ -1,10 +1,11 @@
 import { describe, expect, test } from "vite-plus/test";
 import { planTaskExecution } from "./execution.js";
-import { taskId, taskName, type UnitTask } from "./type.js";
+import { taskId, taskName, taskNumber, type UnitTask } from "./type.js";
 
 const task = (): UnitTask => ({
   type: "unit",
   id: taskId("abcdefghijklmnopqrstu")._unsafeUnwrap(),
+  number: taskNumber(1)._unsafeUnwrap(),
   name: taskName("Try the runner agnostic workflow")._unsafeUnwrap(),
 });
 

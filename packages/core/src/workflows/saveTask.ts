@@ -1,6 +1,6 @@
 import { ResultAsync } from "neverthrow";
 import type { CreatedTask } from "./createTask.js";
-import type { UnitTask } from "../type.js";
+import { taskNumber, type UnitTask } from "../type.js";
 
 type RepositoryError = undefined;
 
@@ -17,6 +17,7 @@ export const saveTask: saveTask = (repository) => (input) => {
     repository.create({
       type: "unit" as const,
       id: input.id,
+      number: taskNumber(1)._unsafeUnwrap(),
       name: input.name,
       delta: input.delta,
     }),

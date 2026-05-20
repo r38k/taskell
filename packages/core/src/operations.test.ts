@@ -23,17 +23,31 @@ describe("task operations", () => {
       status: "inbox",
       task: {
         type: "unit",
+        number: 1,
         name: "Capture the first CLI command",
         delta: "The task can be listed later.",
       },
     });
   });
 
+  test("allocates task numbers from current inbox and active tasks", async () => {
+    const repository = createMemoryTaskRepository();
+    const first = await addUnitTask(repository, { name: "First" });
+    const second = await addUnitTask(repository, { name: "Second" });
+    await completeTask(repository, { ref: "#2" });
+
+    const third = await addUnitTask(repository, { name: "Third" });
+
+    expect(first._unsafeUnwrap().task.number).toBe(1);
+    expect(second._unsafeUnwrap().task.number).toBe(2);
+    expect(third._unsafeUnwrap().task.number).toBe(2);
+  });
+
   test("lists tasks by status", async () => {
     const repository = createMemoryTaskRepository();
     await addUnitTask(repository, { name: "One" });
     const started = await addUnitTask(repository, { name: "Two" });
-    await startTask(repository, { id: started._unsafeUnwrap().task.id });
+    await startTask(repository, { ref: started._unsafeUnwrap().task.number.toString() });
 
     const inbox = await listTasks(repository, { status: "inbox" });
     const active = await listTasks(repository, { status: "active" });
@@ -44,11 +58,11 @@ describe("task operations", () => {
     expect(active._unsafeUnwrap()[0]?.task.name).toBe("Two");
   });
 
-  test("gets a task by id", async () => {
+  test("gets a task by number reference", async () => {
     const repository = createMemoryTaskRepository();
     const created = await addUnitTask(repository, { name: "Find me" });
 
-    const found = await getTask(repository, { id: created._unsafeUnwrap().task.id });
+    const found = await getTask(repository, { ref: `#${created._unsafeUnwrap().task.number}` });
 
     expect(found._unsafeUnwrap()).toMatchObject({
       status: "inbox",
@@ -62,8 +76,8 @@ describe("task operations", () => {
     const repository = createMemoryTaskRepository();
     const created = await addUnitTask(repository, { name: "Move through lifecycle" });
 
-    const active = await startTask(repository, { id: created._unsafeUnwrap().task.id });
-    const done = await completeTask(repository, { id: created._unsafeUnwrap().task.id });
+    const active = await startTask(repository, { ref: created._unsafeUnwrap().task.number });
+    const done = await completeTask(repository, { ref: created._unsafeUnwrap().task.number });
 
     expect(active._unsafeUnwrap().status).toBe("active");
     expect(done._unsafeUnwrap().status).toBe("done");
@@ -72,10 +86,10 @@ describe("task operations", () => {
   test("schedules a unit task and keeps its current status", async () => {
     const repository = createMemoryTaskRepository();
     const created = await addUnitTask(repository, { name: "Schedule me" });
-    await startTask(repository, { id: created._unsafeUnwrap().task.id });
+    await startTask(repository, { ref: created._unsafeUnwrap().task.number });
 
     const scheduled = await scheduleTask(repository, {
-      id: created._unsafeUnwrap().task.id,
+      ref: created._unsafeUnwrap().task.number,
       dueDate: "2026-05-20",
     });
 
@@ -91,5 +105,16 @@ describe("task operations", () => {
     if (task.type === "scheduled") {
       expect(task.dueDate.toString()).toBe("2026-05-20");
     }
+  });
+
+  test("does not resolve done tasks by number reference", async () => {
+    const repository = createMemoryTaskRepository();
+    const created = await addUnitTask(repository, { name: "Done is out of lookup" });
+    await completeTask(repository, { ref: created._unsafeUnwrap().task.number });
+
+    const found = await getTask(repository, { ref: created._unsafeUnwrap().task.number });
+
+    expect(found.isErr()).toBe(true);
+    expect(found._unsafeUnwrapErr().kind).toBe("NotFound");
   });
 });

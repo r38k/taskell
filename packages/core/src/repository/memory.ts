@@ -1,5 +1,5 @@
 import { errAsync, okAsync } from "neverthrow";
-import type { Task, TaskId, TaskSet, TaskSetId, TaskStatus } from "../type.js";
+import type { Task, TaskId, TaskNumber, TaskSet, TaskSetId, TaskStatus } from "../type.js";
 import type { RepositoryError, RepositoryResult, TaskRecord, TaskRepository } from "./index.js";
 
 const notFound = (message: string): RepositoryError => ({ kind: "NotFound", message });
@@ -19,6 +19,13 @@ export const createMemoryTaskRepository = (): TaskRepository => {
   const findTask = (id: TaskId): RepositoryResult<TaskRecord> => {
     const record = findRecord(id);
     return record ? okAsync(record) : errAsync(notFound(`Task not found: ${id}`));
+  };
+
+  const findTaskByNumber = (number: TaskNumber): RepositoryResult<TaskRecord> => {
+    const record = Array.from(records.values()).find(
+      (value) => value.status !== "done" && value.task.number === number,
+    );
+    return record ? okAsync(record) : errAsync(notFound(`Task not found: #${number}`));
   };
 
   return {
@@ -42,6 +49,7 @@ export const createMemoryTaskRepository = (): TaskRepository => {
       errAsync(notFound("Task set persistence is not implemented in memory repository")),
 
     findTask,
+    findTaskByNumber,
     listTasks: (status) => {
       const found = Array.from(records.values()).filter((record) =>
         status ? record.status === status : true,

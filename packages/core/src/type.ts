@@ -31,6 +31,17 @@ export const taskDelta = (delta: string): Result<TaskDelta, TaskDeltaError> => {
   return ok(delta as TaskDelta);
 };
 
+export type TaskNumber = NewType<"TaskNumber", number>;
+export type TaskNumberError = {
+  kind: "Validation";
+};
+
+export const taskNumber = (number: number): Result<TaskNumber, TaskNumberError> => {
+  return Number.isInteger(number) && number > 0
+    ? ok(number as TaskNumber)
+    : err({ kind: "Validation" });
+};
+
 export type TaskDueDate = NewType<"TaskDueDate", Temporal.PlainDate>;
 export type TaskDueDateError = {
   kind: "Validation";
@@ -64,6 +75,7 @@ export const taskSetName = (name: string): Result<TaskSetName, TaskNameError> =>
 
 type _Task = {
   id: TaskId;
+  number: TaskNumber;
   name: TaskName;
   delta?: TaskDelta;
 };

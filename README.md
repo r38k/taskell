@@ -61,10 +61,10 @@ vp run @taskell/cli#build
 apps/cli/dist/js/index.mjs help
 apps/cli/dist/js/index.mjs add "READMEを更新する"
 apps/cli/dist/js/index.mjs list
-apps/cli/dist/js/index.mjs start <task-id>
-apps/cli/dist/js/index.mjs schedule <task-id> 2026-05-20
-apps/cli/dist/js/index.mjs plan-runner <task-id> --effect externalSideEffect
-apps/cli/dist/js/index.mjs done <task-id>
+apps/cli/dist/js/index.mjs start 1
+apps/cli/dist/js/index.mjs schedule '#1' 2026-05-20
+apps/cli/dist/js/index.mjs plan-runner 1 --effect externalSideEffect
+apps/cli/dist/js/index.mjs done 1
 ```
 
 データ保存先を分ける場合は `--base-path` を使う:
@@ -102,6 +102,18 @@ apps/cli/dist/taskell help
 apps/cli/dist/taskell add "SEAで動かす"
 apps/cli/dist/taskell list
 ```
+
+CLI では内部 ID ではなく issue 番号のような task number を使う．
+
+```sh
+taskell add "READMEを更新する"
+# added #1 [inbox] READMEを更新する
+
+taskell start 1
+taskell done '#1'
+```
+
+完了済みタスクは番号参照と採番の対象外になるため，番号は後で再利用される．
 
 SEA ビルドは内部で以下を行う．
 

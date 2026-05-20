@@ -1,5 +1,12 @@
-import { okAsync, Result, ResultAsync } from "neverthrow";
-import { taskId, type TaskId, type TaskStatus, type UnitTask } from "./type.js";
+import { errAsync, okAsync, Result, ResultAsync } from "neverthrow";
+import {
+  taskId,
+  taskNumber,
+  type TaskId,
+  type TaskNumber,
+  type TaskStatus,
+  type UnitTask,
+} from "./type.js";
 import type {
   RepositoryError,
   RepositoryResult,
@@ -25,7 +32,7 @@ export type AddUnitTaskInput = {
 };
 
 export type TaskLookupInput = {
-  id: string | TaskId;
+  ref: string | number | TaskId | TaskNumber;
 };
 
 export type ListTasksInput = {
@@ -44,9 +51,27 @@ const validationError = (message: string): TaskOperationError => ({
 const parseTaskId = (id: string | TaskId): Result<TaskId, TaskOperationError> =>
   taskId(id).mapErr(() => validationError(`Invalid task id: ${id}`));
 
+const parseTaskNumber = (value: string | number): Result<TaskNumber, TaskOperationError> => {
+  const raw =
+    typeof value === "number" ? value : Number(value.startsWith("#") ? value.slice(1) : value);
+  return taskNumber(raw).mapErr(() => validationError(`Invalid task number: ${value}`));
+};
+
 const fromRepository = <TValue>(
   result: RepositoryResult<TValue>,
 ): ResultAsync<TValue, TaskOperationError> => result.mapErr((error) => error);
+
+const allocateTaskNumber = (
+  repository: TaskRepository,
+): ResultAsync<TaskNumber, TaskOperationError> =>
+  fromRepository(repository.listTasks()).andThen((records) => {
+    const activeNumbers = records
+      .filter((record) => record.status !== "done")
+      .map((record) => record.task.number);
+    const next = activeNumbers.length > 0 ? Math.max(...activeNumbers) + 1 : 1;
+    const number = taskNumber(next).mapErr(() => validationError("Invalid next task number"));
+    return number.isOk() ? okAsync(number.value) : errAsync(number.error);
+  });
 
 export const addUnitTask = (
   repository: TaskRepository,
@@ -59,15 +84,18 @@ export const addUnitTask = (
   }).mapErr(() => validationError("Task name must not be empty"));
 
   return created.asyncAndThen((task) =>
-    fromRepository(
-      repository
-        .saveUnitTask({
-          type: "unit",
-          id: task.id,
-          name: task.name,
-          delta: task.delta,
-        })
-        .map((saved) => ({ task: saved, status: "inbox" as const })),
+    allocateTaskNumber(repository).andThen((number) =>
+      fromRepository(
+        repository
+          .saveUnitTask({
+            type: "unit",
+            id: task.id,
+            number,
+            name: task.name,
+            delta: task.delta,
+          })
+          .map((saved) => ({ task: saved, status: "inbox" as const })),
+      ),
     ),
   );
 };
@@ -82,7 +110,13 @@ export const getTask = (
   repository: TaskRepository,
   input: TaskLookupInput,
 ): ResultAsync<TaskRecord, TaskOperationError> =>
-  parseTaskId(input.id).asyncAndThen((id) => fromRepository(repository.findTask(id)));
+  typeof input.ref === "number" || (typeof input.ref === "string" && /^#?\d+$/.test(input.ref))
+    ? parseTaskNumber(input.ref).asyncAndThen((number) =>
+        fromRepository(repository.findTaskByNumber(number)),
+      )
+    : parseTaskId(input.ref as string | TaskId).asyncAndThen((id) =>
+        fromRepository(repository.findTask(id)),
+      );
 
 const moveTask = (
   repository: TaskRepository,

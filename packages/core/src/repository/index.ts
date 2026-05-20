@@ -3,6 +3,7 @@ import {
   type Task,
   type ScheduledTask,
   type TaskId,
+  type TaskNumber,
   type TaskSet,
   type TaskSetId,
   type TaskStatus,
@@ -34,6 +35,7 @@ export interface TaskRepository {
   findTaskSet(id: TaskSetId): RepositoryResult<TaskSet>;
 
   findTask(id: TaskId): RepositoryResult<TaskRecord>;
+  findTaskByNumber(number: TaskNumber): RepositoryResult<TaskRecord>;
   listTasks(status?: TaskStatus): RepositoryResult<ReadonlyArray<TaskRecord>>;
   moveTaskStatus(input: {
     id: TaskId;

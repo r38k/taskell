@@ -37,14 +37,17 @@ const effects = [
 const help = `Usage:
   taskell add <name> [--delta <text>] [--runner] [--effect <readOnly|localWrite|externalSideEffect>] [--instruction <text>]
   taskell list [--status <inbox|active|done>]
-  taskell get <task-id>
-  taskell start <task-id>
-  taskell done <task-id>
-  taskell schedule <task-id> <YYYY-MM-DD>
-  taskell plan-runner <task-id> [--effect <readOnly|localWrite|externalSideEffect>] [--instruction <text>]
+  taskell get <task-ref>
+  taskell start <task-ref>
+  taskell done <task-ref>
+  taskell schedule <task-ref> <YYYY-MM-DD>
+  taskell plan-runner <task-ref> [--effect <readOnly|localWrite|externalSideEffect>] [--instruction <text>]
 
 Options:
   --base-path <path>  Use a custom Taskell data directory.
+
+Task refs:
+  Use issue-like task numbers such as 1 or #1.
 `;
 
 const isStatus = (value: string | undefined): value is TaskStatus =>
@@ -110,7 +113,7 @@ const parseOptions = (
 const formatTask = (record: TaskRecord): string => {
   const dueDate = record.task.type === "scheduled" ? ` due:${record.task.dueDate.toString()}` : "";
   const delta = record.task.delta ? ` delta:${record.task.delta}` : "";
-  return `${record.task.id} [${record.status}] ${record.task.name}${dueDate}${delta}`;
+  return `#${record.task.number} [${record.status}] ${record.task.name}${dueDate}${delta}`;
 };
 
 const formatPlan = (
@@ -128,14 +131,14 @@ const formatPlan = (
   });
 
   if (plan.kind === "approvalRequired") {
-    return `approval-required ${plan.request.taskId} effect:${plan.request.allowedEffect} status:${plan.request.status}`;
+    return `approval-required #${record.task.number} effect:${plan.request.allowedEffect} status:${plan.request.status}`;
   }
 
   if (plan.kind === "runnerRequest") {
-    return `runner-request ${plan.request.taskId} effect:${plan.request.allowedEffect} status:${plan.request.status}`;
+    return `runner-request #${record.task.number} effect:${plan.request.allowedEffect} status:${plan.request.status}`;
   }
 
-  return `manual ${plan.taskId}`;
+  return `manual #${record.task.number}`;
 };
 
 export const run = async (argv: string[]): Promise<CommandResult> => {
@@ -174,21 +177,21 @@ export const run = async (argv: string[]): Promise<CommandResult> => {
     }
 
     if (command === "get") {
-      const result = await getTask(repository, { id: positional[0] ?? "" });
+      const result = await getTask(repository, { ref: positional[0] ?? "" });
       return result.isOk()
         ? { exitCode: 0, output: formatTask(result.value) }
         : { exitCode: 1, output: result.error.message };
     }
 
     if (command === "start") {
-      const result = await startTask(repository, { id: positional[0] ?? "" });
+      const result = await startTask(repository, { ref: positional[0] ?? "" });
       return result.isOk()
         ? { exitCode: 0, output: `started ${formatTask(result.value)}` }
         : { exitCode: 1, output: result.error.message };
     }
 
     if (command === "done") {
-      const result = await completeTask(repository, { id: positional[0] ?? "" });
+      const result = await completeTask(repository, { ref: positional[0] ?? "" });
       return result.isOk()
         ? { exitCode: 0, output: `done ${formatTask(result.value)}` }
         : { exitCode: 1, output: result.error.message };
@@ -196,7 +199,7 @@ export const run = async (argv: string[]): Promise<CommandResult> => {
 
     if (command === "schedule") {
       const result = await scheduleTask(repository, {
-        id: positional[0] ?? "",
+        ref: positional[0] ?? "",
         dueDate: positional[1] ?? "",
       });
       return result.isOk()
@@ -205,7 +208,7 @@ export const run = async (argv: string[]): Promise<CommandResult> => {
     }
 
     if (command === "plan-runner") {
-      const result = await getTask(repository, { id: positional[0] ?? "" });
+      const result = await getTask(repository, { ref: positional[0] ?? "" });
       return result.isOk()
         ? {
             exitCode: 0,

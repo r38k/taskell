@@ -6,6 +6,7 @@ import {
   type ScheduledTask,
   type Task,
   type TaskId,
+  type TaskNumber,
   type TaskSet,
   type TaskSetId,
   type TaskStatus,
@@ -14,6 +15,7 @@ import {
   taskDueDate,
   taskId,
   taskName,
+  taskNumber,
 } from "../type.js";
 import type {
   RepositoryError,
@@ -57,15 +59,17 @@ const parseUnitTask = (value: unknown): Result<UnitTask, RepositoryError> => {
 
   const values = Result.combine([
     taskId(asString(value.id) ?? ""),
+    taskNumber(Number(value.number)),
     taskName(asString(value.name) ?? ""),
     value.delta === undefined ? ok(undefined) : taskDelta(asString(value.delta) ?? ""),
   ]);
 
   return values
     .mapErr((cause) => toRepositoryError("Validation", "Invalid unit task data", cause))
-    .map(([id, name, delta]) => ({
+    .map(([id, number, name, delta]) => ({
       type: "unit" as const,
       id,
+      number,
       name,
       delta,
     }));
@@ -78,6 +82,7 @@ const parseScheduledTask = (value: unknown): Result<ScheduledTask, RepositoryErr
 
   const values = Result.combine([
     taskId(asString(value.id) ?? ""),
+    taskNumber(Number(value.number)),
     taskName(asString(value.name) ?? ""),
     value.delta === undefined ? ok(undefined) : taskDelta(asString(value.delta) ?? ""),
     taskDueDate(asString(value.dueDate) ?? ""),
@@ -85,9 +90,10 @@ const parseScheduledTask = (value: unknown): Result<ScheduledTask, RepositoryErr
 
   return values
     .mapErr((cause) => toRepositoryError("Validation", "Invalid scheduled task data", cause))
-    .map(([id, name, delta, dueDate]) => ({
+    .map(([id, number, name, delta, dueDate]) => ({
       type: "scheduled" as const,
       id,
+      number,
       name,
       delta,
       dueDate,
@@ -218,6 +224,14 @@ export const createJsonlTaskRepository = (basePath: string = DEFAULT_BASE_PATH):
           : toRepositoryError("IO", "Failed to list tasks", cause),
     );
 
+  const findTaskByNumber = (number: TaskNumber): RepositoryResult<TaskRecord> =>
+    listTasks().andThen((records) => {
+      const record = records.find(
+        (value) => value.status !== "done" && value.task.number === number,
+      );
+      return record ? ok(record) : err(toRepositoryError("NotFound", `Task not found: #${number}`));
+    });
+
   const findUnitTask = (id: TaskId): RepositoryResult<UnitTask> =>
     findTask(id).andThen((record) =>
       record.task.type === "unit"
@@ -297,6 +311,7 @@ export const createJsonlTaskRepository = (basePath: string = DEFAULT_BASE_PATH):
     findScheduledTask,
     findTaskSet,
     findTask,
+    findTaskByNumber,
     listTasks,
     moveTaskStatus,
     replaceTask,
