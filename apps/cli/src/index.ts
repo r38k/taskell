@@ -27,6 +27,8 @@ type ParsedOptions = {
   instruction?: string;
 };
 
+type Command = "add" | "list" | "get" | "start" | "done" | "schedule" | "plan-runner" | "help";
+
 const statuses = ["inbox", "active", "done"] as const satisfies ReadonlyArray<TaskStatus>;
 const effects = [
   "readOnly",
@@ -35,20 +37,71 @@ const effects = [
 ] as const satisfies ReadonlyArray<RunnerAllowedEffect>;
 
 const help = `Usage:
-  taskell add <name> [--delta <text>] [--runner] [--effect <readOnly|localWrite|externalSideEffect>] [--instruction <text>]
-  taskell list [--status <inbox|active|done>]
-  taskell get <task-ref>
-  taskell start <task-ref>
-  taskell done <task-ref>
-  taskell schedule <task-ref> <YYYY-MM-DD>
-  taskell plan-runner <task-ref> [--effect <readOnly|localWrite|externalSideEffect>] [--instruction <text>]
+  taskell add|a <name> [--delta <text>] [--runner] [--effect <effect>] [--instruction <text>]
+  taskell list|ls [--status <inbox|active|done>]
+  taskell get|show <task-ref>
+  taskell start|s <task-ref>
+  taskell done|d <task-ref>
+  taskell schedule|due <task-ref> <YYYY-MM-DD>
+  taskell plan-runner|run <task-ref> [--effect <effect>] [--instruction <text>]
 
 Options:
-  --base-path <path>  Use a custom Taskell data directory.
+  --base-path <path>     Use a custom Taskell data directory.
+  --status <status>      Filter list output by inbox, active, or done.
+  --delta <text>         Describe the expected state change for a task.
+  --runner               Print a runner execution plan after adding a task.
+  --effect <effect>      Select readOnly, localWrite, or externalSideEffect.
+  --instruction <text>   Add runner-facing instructions.
 
 Task refs:
   Use issue-like task numbers such as 1 or #1.
+  Completed tasks are not resolved by task number.
+
+Effects:
+  readOnly              Runner may inspect information only.
+  localWrite            Runner may edit local files.
+  externalSideEffect    Runner output must wait for approval.
+
+Aliases:
+  a     add
+  ls    list
+  show  get
+  s     start
+  d     done
+  due   schedule
+  run   plan-runner
+
+Examples:
+  taskell a "READMEを更新する" --delta "CLIの手順が分かる"
+  taskell ls --status inbox
+  taskell s 1
+  taskell due '#1' 2026-05-20
+  taskell run 1 --effect externalSideEffect
+  taskell d 1
 `;
+
+const commandAliases = new Map<string, Command>([
+  ["help", "help"],
+  ["--help", "help"],
+  ["-h", "help"],
+  ["add", "add"],
+  ["a", "add"],
+  ["list", "list"],
+  ["ls", "list"],
+  ["get", "get"],
+  ["show", "get"],
+  ["start", "start"],
+  ["s", "start"],
+  ["done", "done"],
+  ["d", "done"],
+  ["schedule", "schedule"],
+  ["due", "schedule"],
+  ["plan-runner", "plan-runner"],
+  ["run", "plan-runner"],
+]);
+
+const resolveCommand = (command: string | undefined): Command | undefined =>
+  command ? commandAliases.get(command) : "help";
 
 const isStatus = (value: string | undefined): value is TaskStatus =>
   statuses.includes(value as TaskStatus);
@@ -143,11 +196,12 @@ const formatPlan = (
 
 export const run = async (argv: string[]): Promise<CommandResult> => {
   try {
-    const [command, ...rest] = argv;
+    const [rawCommand, ...rest] = argv;
+    const command = resolveCommand(rawCommand);
     const { positional, options, runner } = parseOptions(rest);
     const repository = createJsonlTaskRepository(options.basePath);
 
-    if (!command || command === "help" || command === "--help" || command === "-h") {
+    if (command === "help") {
       return { exitCode: 0, output: help };
     }
 
@@ -217,7 +271,7 @@ export const run = async (argv: string[]): Promise<CommandResult> => {
         : { exitCode: 1, output: result.error.message };
     }
 
-    return { exitCode: 1, output: `Unknown command: ${command}\n\n${help}` };
+    return { exitCode: 1, output: `Unknown command: ${rawCommand ?? ""}\n\n${help}` };
   } catch (cause) {
     return {
       exitCode: 1,

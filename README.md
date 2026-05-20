@@ -59,19 +59,19 @@ vp run @taskell/cli#build
 
 ```sh
 apps/cli/dist/js/index.mjs help
-apps/cli/dist/js/index.mjs add "READMEを更新する"
-apps/cli/dist/js/index.mjs list
-apps/cli/dist/js/index.mjs start 1
-apps/cli/dist/js/index.mjs schedule '#1' 2026-05-20
-apps/cli/dist/js/index.mjs plan-runner 1 --effect externalSideEffect
-apps/cli/dist/js/index.mjs done 1
+apps/cli/dist/js/index.mjs a "READMEを更新する"
+apps/cli/dist/js/index.mjs ls
+apps/cli/dist/js/index.mjs s 1
+apps/cli/dist/js/index.mjs due '#1' 2026-05-20
+apps/cli/dist/js/index.mjs run 1 --effect externalSideEffect
+apps/cli/dist/js/index.mjs d 1
 ```
 
 データ保存先を分ける場合は `--base-path` を使う:
 
 ```sh
-apps/cli/dist/js/index.mjs add "試す" --base-path /tmp/taskell-data
-apps/cli/dist/js/index.mjs list --base-path /tmp/taskell-data
+apps/cli/dist/js/index.mjs a "試す" --base-path /tmp/taskell-data
+apps/cli/dist/js/index.mjs ls --base-path /tmp/taskell-data
 ```
 
 # 単一バイナリ
@@ -99,18 +99,18 @@ apps/cli/dist/taskell
 
 ```sh
 apps/cli/dist/taskell help
-apps/cli/dist/taskell add "SEAで動かす"
-apps/cli/dist/taskell list
+apps/cli/dist/taskell a "SEAで動かす"
+apps/cli/dist/taskell ls
 ```
 
 CLI では内部 ID ではなく issue 番号のような task number を使う．
 
 ```sh
-taskell add "READMEを更新する"
+taskell a "READMEを更新する"
 # added #1 [inbox] READMEを更新する
 
-taskell start 1
-taskell done '#1'
+taskell s 1
+taskell d '#1'
 ```
 
 完了済みタスクは番号参照と採番の対象外になるため，番号は後で再利用される．
