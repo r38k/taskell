@@ -1,5 +1,6 @@
 import type { ResultAsync } from "neverthrow";
 import {
+  type Task,
   type ScheduledTask,
   type TaskId,
   type TaskSet,
@@ -18,6 +19,11 @@ export type RepositoryError = {
 
 export type RepositoryResult<TValue> = ResultAsync<TValue, RepositoryError>;
 
+export type TaskRecord = {
+  task: Task;
+  status: TaskStatus;
+};
+
 export interface TaskRepository {
   saveUnitTask(task: UnitTask, status?: TaskStatus): RepositoryResult<UnitTask>;
   saveScheduledTask(task: ScheduledTask, status?: TaskStatus): RepositoryResult<ScheduledTask>;
@@ -26,6 +32,15 @@ export interface TaskRepository {
   findUnitTask(id: TaskId): RepositoryResult<UnitTask>;
   findScheduledTask(id: TaskId): RepositoryResult<ScheduledTask>;
   findTaskSet(id: TaskSetId): RepositoryResult<TaskSet>;
+
+  findTask(id: TaskId): RepositoryResult<TaskRecord>;
+  listTasks(status?: TaskStatus): RepositoryResult<ReadonlyArray<TaskRecord>>;
+  moveTaskStatus(input: {
+    id: TaskId;
+    from: TaskStatus;
+    to: TaskStatus;
+  }): RepositoryResult<TaskRecord>;
+  replaceTask(input: { previous: TaskRecord; next: Task }): RepositoryResult<TaskRecord>;
 
   // listUnitTasks(status: TaskStatus): RepositoryResult<ReadonlyArray<UnitTask>>;
   // listScheduledTasks(status: TaskStatus): RepositoryResult<ReadonlyArray<ScheduledTask>>;

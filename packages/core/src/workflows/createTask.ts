@@ -2,7 +2,6 @@ import { ok, Result } from "neverthrow";
 import {
   taskDelta,
   type TaskDelta,
-  type TaskDeltaError,
   taskId,
   type TaskId,
   type TaskIdError,
@@ -31,7 +30,7 @@ export interface CreatedTask {
   delta?: TaskDelta;
 }
 
-type ValidationError = TaskNameError | TaskDeltaError;
+type ValidationError = TaskNameError;
 
 type validateTask = (input: UnvalidatedTask) => Result<ValidatedTask, ValidationError>;
 

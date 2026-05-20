@@ -1,9 +1,11 @@
 export * from "./type.js";
-export { addTask } from "./task.js";
 export * from "./repository/index.js";
 export { createJsonlTaskRepository } from "./repository/jsonl.js";
+export { createMemoryTaskRepository } from "./repository/memory.js";
+export * from "./operations.js";
 export { createTaskWorkflow } from "./workflows/createTask.js";
 export type { CreatedTask } from "./workflows/createTask.js";
+export * from "./execution.js";
 export { saveTask } from "./workflows/saveTask.js";
 export {
   withDueDate,
