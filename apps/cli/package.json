@@ -17,7 +17,7 @@
   },
   "scripts": {
     "build": "vp pack",
-    "build:sea": "vp pack src/index.ts -f cjs -d dist/sea --no-dts --no-exports && mise exec node@25.9 -- node --build-sea sea-config.json",
+    "build:sea": "vp pack src/index.ts -f cjs -d dist/sea --no-dts --no-exports && node --build-sea sea-config.json",
     "dev": "vp pack --watch",
     "test": "vp test",
     "check": "vp check"

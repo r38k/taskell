@@ -3,12 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "scripts": {
-    "ready": "vp fmt && vp run @taskell/core#build && vp lint && vp run -F '@taskell/*' test && vp run -F '@taskell/*' build",
-    "build:sea": "vp run @taskell/cli#build:sea",
-    "dev": "vp run @taskell/core#dev",
-    "prepare": "vp config"
-  },
+  "scripts": {},
   "devDependencies": {
     "@typescript/native-preview": "catalog:",
     "vite-plus": "catalog:"

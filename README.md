@@ -40,10 +40,18 @@ vp install
 # 開発時の確認
 
 ```sh
-pnpm ready
+vp run verify
 ```
 
-`ready` は format，lint，test，build を実行する．
+`verify` は format，lint，test，build を実行する．
+
+よく使う Vite+ task:
+
+```sh
+vp run verify
+vp run cli:sea
+vp run cli:install-local
+```
 
 pnpm の shim 側で Node.js の engine warning が出ることがあるが，Vite+ / mise 側で Node 25.9 が使えていればビルド自体は通る．
 
@@ -86,7 +94,7 @@ Node.js の Single Executable Applications (SEA) で CLI を単一バイナリ�
 ビルド:
 
 ```sh
-mise exec node@25.9 -- vp run @taskell/cli#build:sea
+vp run cli:sea
 ```
 
 生成物:
@@ -120,6 +128,14 @@ SEA ビルドは内部で以下を行う．
 1. CLI と core 依存を `apps/cli/dist/sea/index.cjs` に bundle する
 2. `apps/cli/sea-config.json` を使って `node --build-sea` を実行する
 3. `apps/cli/dist/taskell` を生成する
+
+ローカルの `taskell` コマンドとして使う場合:
+
+```sh
+vp run cli:install-local
+```
+
+これは `vp run cli:sea` を実行したうえで，`~/.local/bin/taskell` に symlink を作る．
 
 # メモ
 
