@@ -3,10 +3,26 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "scripts": {},
+  "scripts": {
+    "build": "pnpm -r --filter '@taskell/*' build",
+    "check": "pnpm format:check && pnpm lint && pnpm typecheck",
+    "cli:install-local": "pnpm cli:sea && mkdir -p ~/.local/bin && ln -sfn $PWD/apps/cli/dist/taskell ~/.local/bin/taskell",
+    "cli:sea": "pnpm --filter @taskell/cli build:sea",
+    "format": "oxfmt --write .",
+    "format:check": "oxfmt --check .",
+    "lint": "oxlint .",
+    "lint:fix": "oxlint . --fix",
+    "test": "pnpm -r --filter '@taskell/*' test",
+    "typecheck": "pnpm -r --filter '@taskell/*' typecheck",
+    "verify": "pnpm format && pnpm --filter @taskell/core build && pnpm lint && pnpm test && pnpm build"
+  },
   "devDependencies": {
     "@typescript/native-preview": "catalog:",
-    "vite-plus": "catalog:"
+    "oxfmt": "catalog:",
+    "oxlint": "catalog:",
+    "tsdown": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   },
   "engines": {
     "node": ">=25.9.0"

@@ -6,19 +6,10 @@ packages:
 catalog:
   "@types/node": ^24
   "@typescript/native-preview": 7.0.0-dev.20260519.1
+  oxfmt: 0.45.0
+  oxlint: 1.60.0
+  tsdown: 0.21.8
   typescript: ^5
-  vite: npm:@voidzero-dev/vite-plus-core@latest
-  vite-plus: latest
-  vitest: npm:@voidzero-dev/vite-plus-test@latest
+  vitest: 4.1.4
 
 catalogMode: prefer
-overrides:
-  vite: "catalog:"
-  vitest: "catalog:"
-peerDependencyRules:
-  allowAny:
-    - vite
-    - vitest
-  allowedVersions:
-    vite: "*"
-    vitest: "*"

@@ -16,19 +16,21 @@
     "./package.json": "./package.json"
   },
   "scripts": {
-    "build": "vp pack",
-    "build:sea": "vp pack src/index.ts -f cjs -d dist/sea --no-dts --no-exports && node --build-sea sea-config.json",
-    "dev": "vp pack --watch",
-    "test": "vp test",
-    "check": "vp check"
+    "build": "tsdown src/index.ts --format esm --out-dir dist/js --no-dts --clean",
+    "build:sea": "tsdown src/index.ts --format cjs --out-dir dist/sea --no-dts --no-exports --clean && node --build-sea sea-config.json",
+    "check": "pnpm typecheck",
+    "dev": "tsdown src/index.ts --format esm --out-dir dist/js --no-dts --clean --watch",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
     "@taskell/core": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "catalog:",
+    "tsdown": "catalog:",
     "typescript": "catalog:",
-    "vite-plus": "catalog:"
+    "vitest": "catalog:"
   },
   "inlinedDependencies": {
     "nanoid": "5.1.9",

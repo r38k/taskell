@@ -1,4 +1,4 @@
-import { describe, expect, test } from "vite-plus/test";
+import { describe, expect, test } from "vitest";
 import { planTaskExecution } from "./execution.js";
 import { taskId, taskName, taskNumber, type UnitTask } from "./type.js";
 

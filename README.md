@@ -22,7 +22,7 @@
 
 # セットアップ
 
-このプロジェクトは Vite+ と pnpm workspace を使う．
+このプロジェクトは pnpm workspace を使う．
 
 Node.js は `mise.toml` で固定している．
 
@@ -34,33 +34,33 @@ mise install
 依存関係を更新する場合:
 
 ```sh
-vp install
+pnpm install
 ```
 
 # 開発時の確認
 
 ```sh
-vp run verify
+pnpm verify
 ```
 
 `verify` は format，lint，test，build を実行する．
 
-よく使う Vite+ task:
+よく使う task:
 
 ```sh
-vp run verify
-vp run cli:sea
-vp run cli:install-local
+pnpm verify
+pnpm cli:sea
+pnpm cli:install-local
 ```
 
-pnpm の shim 側で Node.js の engine warning が出ることがあるが，Vite+ / mise 側で Node 25.9 が使えていればビルド自体は通る．
+pnpm の shim 側で Node.js の engine warning が出ることがあるが，mise 側で Node 25.9 が使えていればビルド自体は通る．
 
 # CLI
 
 通常の JS CLI をビルドする:
 
 ```sh
-vp run @taskell/cli#build
+pnpm --filter @taskell/cli build
 ```
 
 実行例:
@@ -94,7 +94,7 @@ Node.js の Single Executable Applications (SEA) で CLI を単一バイナリ�
 ビルド:
 
 ```sh
-vp run cli:sea
+pnpm cli:sea
 ```
 
 生成物:
@@ -132,10 +132,10 @@ SEA ビルドは内部で以下を行う．
 ローカルの `taskell` コマンドとして使う場合:
 
 ```sh
-vp run cli:install-local
+pnpm cli:install-local
 ```
 
-これは `vp run cli:sea` を実行したうえで，`~/.local/bin/taskell` に symlink を作る．
+これは `pnpm cli:sea` を実行したうえで，`~/.local/bin/taskell` に symlink を作る．
 
 # メモ
 
